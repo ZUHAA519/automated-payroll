@@ -3,12 +3,22 @@ import streamlit as st
 # Page Configuration for professional look
 st.set_page_config(page_title="Automated Payroll System", page_icon="💼", layout="wide")
 
+# --- INITIALIZE DATABASE (Session State) ---
+# Agar memory mein pehle se data nahi hai, toh dummy data initialize karein
+if "employee_list" not in st.session_state:
+    st.session_state.employee_list = [
+        {"name": "Maliha", "role": "Teacher", "salary": 45000, "email": "maliha@academy.com"},
+        {"name": "Masooma", "role": "Coordinator", "salary": 55000, "email": "masooma@academy.com"},
+        {"name": "Fatima", "role": "Admin", "salary": 40000, "email": "fatima@academy.com"},
+        {"name": "Laiba", "role": "IT Support", "salary": 50000, "email": "laiba@academy.com"}
+    ]
+
 # Custom Styling for a decent and attractive look
 st.markdown("""
     <style>
     .main-title { font-size: 38px; font-weight: bold; color: #1E3A8A; margin-bottom: 5px; }
     .sub-title { font-size: 16px; color: #555555; margin-bottom: 25px; }
-    .metric-box { padding: 20px; background-color: #F3F4F6; border-radius: 10px; border-left: 5px solid #1E3A8A; }
+    .metric-box { padding: 20px; background-color: #F3F4F6; border-radius: 10px; border-left: 5px solid #1E3A8A; text-align: center; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -20,6 +30,10 @@ page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Prof
 st.sidebar.markdown("---")
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
 
+# --- CALCULATE METRICS DYNAMICALLY ---
+total_emp_count = len(st.session_state.employee_list) + 146  # Hum base 150 rakh rahe hain dummy dikhane ke liye
+total_payroll = sum(emp['salary'] for emp in st.session_state.employee_list) + 4310000
+
 # --- PAGE 1: DASHBOARD HOME ---
 if page == "🏠 Dashboard Home":
     st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
@@ -29,16 +43,20 @@ if page == "🏠 Dashboard Home":
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
-        st.metric(label="Total Employees", value="150")
+        st.metric(label="Total Employees", value=f"{total_emp_count}")
         st.markdown('</div>', unsafe_allow_html=True)
     with col2:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
-        st.metric(label="Total Payroll This Month", value="Rs. 4,500,000")
+        st.metric(label="Total Payroll This Month", value=f"Rs. {total_payroll:,}")
         st.markdown('</div>', unsafe_allow_html=True)
     with col3:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
         st.metric(label="Pending Approvals", value="5")
         st.markdown('</div>', unsafe_allow_html=True)
+        
+    # Display Registered Employees List
+    st.markdown("<br><br><h3>📋 Registered System Profiles</h3>", unsafe_allow_html=True)
+    st.table(st.session_state.employee_list)
 
 # --- PAGE 2: ADD EMPLOYEE PROFILE ---
 elif page == "➕ Add Employee Profile":
@@ -58,10 +76,13 @@ elif page == "➕ Add Employee Profile":
         submit_btn = st.form_submit_button("Save Employee Profile")
     
     if submit_btn:
-        if emp_name:
-            st.success(f"🎉 Profile created successfully for {emp_name} ({emp_role})!")
+        if emp_name and emp_email:
+            # Append new data to our session state list
+            new_emp = {"name": emp_name, "role": emp_role, "salary": basic_salary, "email": emp_email}
+            st.session_state.employee_list.append(new_emp)
+            st.success(f"🎉 Profile created successfully for {emp_name} ({emp_role})! Go check Dashboard Home.")
         else:
-            st.warning("Please enter the employee name before saving.")
+            st.error("Please fill in both Employee Name and Email Address before saving.")
 
 # --- PAGE 3: SALARY CALCULATOR ---
 elif page == "🧮 Salary Calculator":
