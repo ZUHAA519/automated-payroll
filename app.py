@@ -31,3 +31,23 @@ elif page == "Attendance & Leaves 📅":
 elif page == "Salary Calculator 💰":
     st.title("Salary & Tax Calculator 💰")
     st.write("Yahan system khud ba khud bonus aur tax calculate karega.")
+    st.markdown("---")
+st.subheader("➕ Add New Employee Profile")
+
+# Naye employee ki details lene ke liye input boxes
+with st.form("employee_form", clear_on_submit=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        emp_name = st.text_input("Employee Name")
+        emp_role = st.selectbox("Role/Designation", ["Teacher", "Admin", "Coordinator", "IT Support"])
+    with col2:
+        basic_salary = st.number_input("Basic Salary (Rs.)", min_value=0, step=5000)
+        emp_email = st.text_input("Email Address")
+    
+    submit_btn = st.form_submit_button("Save Employee Profile")
+
+if submit_btn:
+    if emp_name:
+        st.success(f"🎉 Profile created successfully for {emp_name} ({emp_role})!")
+    else:
+        st.warning("Please enter the employee name.")
