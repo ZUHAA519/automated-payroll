@@ -4,7 +4,6 @@ import streamlit as st
 st.set_page_config(page_title="Automated Payroll System", page_icon="💼", layout="wide")
 
 # --- INITIALIZE DATABASE (Session State) ---
-# Agar memory mein pehle se data nahi hai, toh dummy data initialize karein
 if "employee_list" not in st.session_state:
     st.session_state.employee_list = [
         {"name": "Maliha", "role": "Teacher", "salary": 45000, "email": "maliha@academy.com"},
@@ -13,7 +12,14 @@ if "employee_list" not in st.session_state:
         {"name": "Laiba", "role": "IT Support", "salary": 50000, "email": "laiba@academy.com"}
     ]
 
-# Custom Styling for a decent and attractive look
+# Leave Requests Database setup
+if "leave_requests" not in st.session_state:
+    st.session_state.leave_requests = [
+        {"id": 1, "name": "Maliha", "type": "Sick Leave", "days": 2, "status": "Pending ⏳"},
+        {"id": 2, "name": "Masooma", "type": "Casual Leave", "days": 1, "status": "Pending ⏳"},
+    ]
+
+# Custom Styling
 st.markdown("""
     <style>
     .main-title { font-size: 38px; font-weight: bold; color: #1E3A8A; margin-bottom: 5px; }
@@ -31,15 +37,15 @@ st.sidebar.markdown("---")
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
 
 # --- CALCULATE METRICS DYNAMICALLY ---
-total_emp_count = len(st.session_state.employee_list) + 146  # Hum base 150 rakh rahe hain dummy dikhane ke liye
+total_emp_count = len(st.session_state.employee_list) + 146
 total_payroll = sum(emp['salary'] for emp in st.session_state.employee_list) + 4310000
+pending_leaves_count = sum(1 for req in st.session_state.leave_requests if "Pending" in req["status"])
 
 # --- PAGE 1: DASHBOARD HOME ---
 if page == "🏠 Dashboard Home":
     st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">Welcome to the Admin Control Panel. Quick system overview metrics are below.</p>', unsafe_allow_html=True)
     
-    # Grid layout for Key Metrics
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
@@ -51,10 +57,9 @@ if page == "🏠 Dashboard Home":
         st.markdown('</div>', unsafe_allow_html=True)
     with col3:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
-        st.metric(label="Pending Approvals", value="5")
+        st.metric(label="Pending Approvals", value=f"{pending_leaves_count}")
         st.markdown('</div>', unsafe_allow_html=True)
         
-    # Display Registered Employees List
     st.markdown("<br><br><h3>📋 Registered System Profiles</h3>", unsafe_allow_html=True)
     st.table(st.session_state.employee_list)
 
@@ -77,7 +82,6 @@ elif page == "➕ Add Employee Profile":
     
     if submit_btn:
         if emp_name and emp_email:
-            # Append new data to our session state list
             new_emp = {"name": emp_name, "role": emp_role, "salary": basic_salary, "email": emp_email}
             st.session_state.employee_list.append(new_emp)
             st.success(f"🎉 Profile created successfully for {emp_name} ({emp_role})! Go check Dashboard Home.")
@@ -104,5 +108,40 @@ elif page == "🧮 Salary Calculator":
 # --- PAGE 4: ATTENDANCE & LEAVES ---
 elif page == "📅 Attendance & Leaves":
     st.markdown('<p class="main-title">Attendance & Leave Tracker</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-title">Monitor employee check-ins, monthly attendance percentages, and leave requests.</p>', unsafe_allow_html=True)
-    st.info("System Module under configuration: Database integration setup coming next.")
+    st.markdown('<p class="sub-title">Monitor employee check-ins and process active leave applications below.</p>', unsafe_allow_html=True)
+    
+    # Section 1: Attendance Summary
+    st.markdown("### 📊 Monthly Attendance Summary")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.write("Avg. Teachers Attendance")
+        st.progress(0.92) # 92%
+    with c2:
+        st.write("Avg. Admin Staff Attendance")
+        st.progress(0.88) # 88%
+    with c3:
+        st.write("Overall System Present Rate")
+        st.progress(0.95) # 95%
+        
+    st.markdown("<br>---<br>", unsafe_allow_html=True)
+    
+    # Section 2: Interactive Leave Approval System
+    st.markdown("### ✉️ Pending Leave Requests")
+    
+    for i, req in enumerate(st.session_state.leave_requests):
+        if "Pending" in req["status"]:
+            # Ek clean card design har request ke liye
+            with st.container():
+                col_info, col_app, col_rej = st.columns([4, 1, 1])
+                with col_info:
+                    st.write(f"**{req['name']}** requested **{req['days']} Day(s)** for *{req['type']}*")
+                with col_app:
+                    if st.button(f"Approve ✅", key=f"app_{req['id']}"):
+                        req["status"] = "Approved 🟢"
+                        st.rerun()
+                with col_rej:
+                    if st.button(f"Reject ❌", key=f"rej_{req['id']}"):
+                        req["status"] = "Rejected 🔴"
+                        st.rerun()
+        else:
+            st.write(f"📝 *Request from {req['name']}: {req['status']}*")
