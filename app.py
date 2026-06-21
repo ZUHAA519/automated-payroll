@@ -51,3 +51,20 @@ if submit_btn:
         st.success(f"🎉 Profile created successfully for {emp_name} ({emp_role})!")
     else:
         st.warning("Please enter the employee name.")
+        st.markdown("---")
+st.subheader("🧮 Quick Salary Calculator")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    sal_input = st.number_input("Enter Basic Salary (Rs.)", min_value=0, value=30000, step=1000)
+with col2:
+    allowances = st.number_input("Allowances / Bonus (Rs.)", min_value=0, value=0, step=500)
+with col3:
+    deductions = st.number_input("Deductions / Tax (Rs.)", min_value=0, value=0, step=500)
+
+# Net Salary Calculate karne ka formula
+net_salary = sal_input + allowances - deductions
+
+# Screen par result khoobsurat tareeqay se dikhane ke liye
+st.metric(label="Net Take-Home Salary", value=f"Rs. {net_salary:,}")
