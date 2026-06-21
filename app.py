@@ -61,7 +61,18 @@ if page == "🏠 Dashboard Home":
         st.markdown('</div>', unsafe_allow_html=True)
         
     st.markdown("<br><br><h3>📋 Registered System Profiles</h3>", unsafe_allow_html=True)
-    st.table(st.session_state.employee_list)
+    
+    # --- ADDED: Interactive Search and Filter Module ---
+    search_query = st.text_input("🔍 Search Employee Profile by Name:", placeholder="Type a name to filter... (e.g., Maliha, Aashiyaan)")
+    
+    # Filter python logic
+    if search_query:
+        filtered_list = [emp for emp in st.session_state.employee_list if search_query.lower() in emp['name'].lower()]
+        st.caption(f"Showing {len(filtered_list)} matching entries out of {total_emp_count} global records.")
+        st.table(filtered_list)
+    else:
+        st.caption(f"Showing {len(st.session_state.employee_list)} recent active master records out of {total_emp_count} global system logs.")
+        st.table(st.session_state.employee_list)
 
 # --- PAGE 2: ADD EMPLOYEE PROFILE ---
 elif page == "➕ Add Employee Profile":
@@ -110,27 +121,23 @@ elif page == "📅 Attendance & Leaves":
     st.markdown('<p class="main-title">Attendance & Leave Tracker</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">Monitor employee check-ins and process active leave applications below.</p>', unsafe_allow_html=True)
     
-    # Section 1: Attendance Summary
     st.markdown("### 📊 Monthly Attendance Summary")
     c1, c2, c3 = st.columns(3)
     with c1:
         st.write("Avg. Teachers Attendance")
-        st.progress(0.92) # 92%
+        st.progress(0.92)
     with c2:
         st.write("Avg. Admin Staff Attendance")
-        st.progress(0.88) # 88%
+        st.progress(0.88)
     with c3:
         st.write("Overall System Present Rate")
-        st.progress(0.95) # 95%
+        st.progress(0.95)
         
     st.markdown("<br>---<br>", unsafe_allow_html=True)
-    
-    # Section 2: Interactive Leave Approval System
     st.markdown("### ✉️ Pending Leave Requests")
     
     for i, req in enumerate(st.session_state.leave_requests):
         if "Pending" in req["status"]:
-            # Ek clean card design har request ke liye
             with st.container():
                 col_info, col_app, col_rej = st.columns([4, 1, 1])
                 with col_info:
