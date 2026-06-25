@@ -21,7 +21,8 @@ if "leave_requests" not in st.session_state:
     ]
 
 # Custom Styling
-# --- REPLACED CLEAN CSS STYLING ---
+# --- REPLACED CLEAN CSS STYLING ---page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
+
 st.markdown("""
     <style>
         /* 1. Pure Page ka Background */
@@ -88,14 +89,9 @@ st.markdown("""
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
-page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
-# Dono emojis ko aik sath match kar do taake ghalti ka chance hi na rahe
 if "Calculator" in page or "Salary" in page:
-    if "💵 Salary Calculator" not in globals():
-        page = "📊 Salary Calculator"
-    else:
-        page = "💵 Salary Calculator"
+    page = "📊 Salary Calculator"
 # --- PAGE 1: DASHBOARD HOME ---
 if page == "🏠 Dashboard Home":
     st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
