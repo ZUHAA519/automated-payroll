@@ -91,7 +91,7 @@ st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
 if "Calculator" in page or "Salary" in page:
-    page = "💵 Salary Calculator" if any("💵" in str(line) for line in open(__file__, encoding="utf-8")) else "📊 Salary Calculator"
+    page = "💵 Salary Calculator"
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
 
 # --- CALCULATE METRICS DYNAMICALLY ---
