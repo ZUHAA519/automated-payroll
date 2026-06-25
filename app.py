@@ -6,12 +6,11 @@ st.set_page_config(page_title="Automated Payroll System", page_icon="💼", layo
 # --- INITIALIZE DATABASE (Session State) ---
 if "employee_list" not in st.session_state:
     st.session_state.employee_list = [
-        {"name": "Maliha", "role": "Teacher", "salary": 45000, "email": "maliha@academy.com", "password": "123"},
-        {"name": "Masooma", "role": "Coordinator", "salary": 55000, "email": "masooma@academy.com", "password": "123"},
-        {"name": "Fatima", "role": "Admin", "salary": 40000, "email": "fatima@academy.com", "password": "123"},
-        {"name": "Laiba", "role": "IT Support", "salary": 50000, "email": "laiba@academy.com", "password": "123"}
+        {"name": "Maliha", "role": "Teacher", "salary": 45000, "email": "maliha@academy.com"},
+        {"name": "Masooma", "role": "Coordinator", "salary": 55000, "email": "masooma@academy.com"},
+        {"name": "Fatima", "role": "Admin", "salary": 40000, "email": "fatima@academy.com"},
+        {"name": "Laiba", "role": "IT Support", "salary": 50000, "email": "laiba@academy.com"}
     ]
-
 
 # Leave Requests Database setup
 if "leave_requests" not in st.session_state:
@@ -21,81 +20,27 @@ if "leave_requests" not in st.session_state:
     ]
 
 # Custom Styling
-# --- REPLACED CLEAN CSS STYLING ---page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
-
 st.markdown("""
     <style>
-        /* 1. Pure Page ka Background */
-        .stApp {
-            background-color: #F8FAFC;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* 2. Main Title Design */
-        h1, .main-title {
-            color: #1E3A8A !important;
-            font-size: 36px !important;
-            font-weight: bold !important;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #3B82F6;
-            margin-bottom: 20px;
-        }
-
-        /* 3. Sidebar Colors & Text Visibility Fix */
-        section[data-testid="stSidebar"] {
-            background-color: #1E3A8A !important;
-        }
-        
-        /* Sidebar ke andar saare text ko white karne ke liye */
-        section[data-testid="stSidebar"] * {
-            color: #FFFFFF !important;
-        }
-        
-        /* Sidebar radio buttons / menu links fix */
-        section[data-testid="stSidebar"] label {
-            color: #FFFFFF !important;
-            font-weight: 500 !important;
-        }
-
-        /* 4. Dashboard Metrics Boxes */
-        div[data-testid="metric-container"] {
-            background-color: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-        div[data-testid="stMetricValue"] {
-            color: #1E3A8A !important;
-            font-weight: bold !important;
-        }
-        div[data-testid="stMetricLabel"] {
-            color: #475569 !important;
-        }
-
-        /* 5. App Buttons Styling */
-        .stButton>button {
-            background-color: #1E3A8A !important;
-            color: white !important;
-            border-radius: 6px !important;
-            border: none !important;
-            font-weight: 600 !important;
-        }
-        .stButton>button:hover {
-            background-color: #3B82F6 !important;
-        }
+    .main-title { font-size: 38px; font-weight: bold; color: #1E3A8A; margin-bottom: 5px; }
+    .sub-title { font-size: 16px; color: #555555; margin-bottom: 25px; }
+    .metric-box { padding: 20px; background-color: #F3F4F6; border-radius: 10px; border-left: 5px solid #1E3A8A; text-align: center; }
     </style>
 """, unsafe_allow_html=True)
+
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
+page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "🧮 Salary Calculator", "📅 Attendance & Leaves"])
 
-# Dono emojis ko aik sath match kar do taake ghalti ka chance hi na rahe
-if "Calculator" in page or "Salary" in page:
-    if "💵 Salary Calculator" not in globals():
-        page = "📊 Salary Calculator"
-    else:
-        page = "💵 Salary Calculator"
+st.sidebar.markdown("---")
+st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
+
+# --- CALCULATE METRICS DYNAMICALLY ---
+total_emp_count = len(st.session_state.employee_list) + 146
+total_payroll = sum(emp['salary'] for emp in st.session_state.employee_list) + 4310000
+pending_leaves_count = sum(1 for req in st.session_state.leave_requests if "Pending" in req["status"])
+
 # --- PAGE 1: DASHBOARD HOME ---
 if page == "🏠 Dashboard Home":
     st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
@@ -207,128 +152,3 @@ elif page == "📅 Attendance & Leaves":
                         st.rerun()
         else:
             st.write(f"📝 *Request from {req['name']}: {req['status']}*")
-            # ----------------------------------------------------
-# --- NEW: EMPLOYEE PORTAL PANEL SECTION ---
-# ----------------------------------------------------
-if page == "👤 Employee Portal":
-    st.markdown('<p class="main-title">Employee Self-Service Portal 👤</p>', unsafe_allow_html=True)
-    st.write("Welcome to the Employee Portal. Please select your name to mark attendance or apply for leave.")
-    
-    # Employee selection dropdown
-    employee_names = [emp["name"] for emp in st.session_state.employee_list]
-    selected_emp = st.selectbox("Select Your Name:", employee_names)
-    
-    # Tabs for Attendance and Leaves
-    tab1, tab2 = st.tabs(["📝 Mark Daily Attendance", "📅 Request Leave"])
-    
-    # TAB 1: ATTENDANCE
-    with tab1:
-        st.subheader("Daily Attendance Ingestion")
-        attendance_status = st.radio("Select Status:", ["Present", "Absent"])
-        
-        if st.button("Submit Attendance", key="attendance_btn"):
-            st.success(f"Thank you, {selected_emp}! Your attendance for today has been marked as '{attendance_status}'.")
-            
-    # TAB 2: LEAVE APPLICATION
-    with tab2:
-        st.subheader("Apply for Form Leave")
-        with st.form(key="employee_leave_form"):
-            leave_type = st.selectbox("Leave Type:", ["Sick Leave", "Casual Leave", "Short Leave"])
-            leave_days = st.number_input("Number of Days:", min_value=1, max_value=10, value=1)
-            reason = st.text_area("Reason for Leave:")
-            
-            submit_leave = st.form_submit_button("Submit Leave Application")
-            
-            if submit_leave:
-                if reason.strip() == "":
-                    st.error("Please provide a valid reason for leave.")
-                else:
-                    new_id = len(st.session_state.leave_requests) + 1
-                    new_request = {
-                        "id": new_id,
-                        "name": selected_emp,
-                        "type": leave_type,
-                        "days": leave_days,
-                        "status": "Pending"
-                    }
-                    st.session_state.leave_requests.append(new_request)
-                    st.success(f"Leave application submitted successfully! Pending for Admin approval.")
-                    # ----------------------------------------------------
-# --- UPDATED: EMPLOYEE PORTAL WITH SECURE LOGIN ---
-# ----------------------------------------------------
-if page == "Employee Portal":
-    st.markdown('<p class="main-title">Employee Portal Login 👤</p>', unsafe_allow_html=True)
-    
-    # Session state to track if user is logged in
-    if "logged_in_user" not in st.session_state:
-        st.session_state.logged_in_user = None
-
-    if st.session_state.logged_in_user is None:
-        # Show Login Form
-        with st.form(key="login_form"):
-            st.subheader("Sign In to Your Workspace")
-            username_input = st.text_input("Enter Your Name / Email:")
-            password_input = st.text_input("Enter Password:", type="password")
-            login_submit = st.form_submit_button("Log In")
-            
-            if login_submit:
-                # Authentication Logic
-                matched_user = None
-                for emp in st.session_state.employee_list:
-                    if (emp["name"].lower() == username_input.strip().lower() or emp.get("email", "").lower() == username_input.strip().lower()) and str(emp.get("password", "123")) == password_input.strip():
-                        matched_user = emp
-                        break
-                
-                if matched_user:
-                    st.session_state.logged_in_user = matched_user
-                    st.success(f"Welcome back, {matched_user['name']}! Login Successful.")
-                    st.rerun()
-                else:
-                    st.error("Invalid Username or Password. Please try again.")
-    else:
-        # User is securely Authenticated
-        current_user = st.session_state.logged_in_user
-        st.write(f"Logged in as: **{current_user['name']}** ({current_user['role']})")
-        
-        # Log Out Button
-        if st.button("Log Out"):
-            st.session_state.logged_in_user = None
-            st.rerun()
-            
-        st.markdown("---")
-        
-        # Tabs for Attendance and Leaves
-        tab1, tab2 = st.tabs(["📝 Mark Daily Attendance", "📅 Request Leave"])
-        
-        # TAB 1: ATTENDANCE
-        with tab1:
-            st.subheader("Daily Attendance Ingestion")
-            attendance_status = st.radio("Select Status:", ["Present", "Absent"])
-            
-            if st.button("Submit Attendance", key="auth_attendance_btn"):
-                st.success(f"Thank you, {current_user['name']}! Your attendance for today has been marked as '{attendance_status}'.")
-                
-        # TAB 2: LEAVE APPLICATION
-        with tab2:
-            st.subheader("Apply for Leave")
-            with st.form(key="auth_employee_leave_form"):
-                leave_type = st.selectbox("Leave Type:", ["Sick Leave", "Casual Leave", "Short Leave"])
-                leave_days = st.number_input("Number of Days:", min_value=1, max_value=10, value=1)
-                reason = st.text_area("Reason for Leave:")
-                
-                submit_leave = st.form_submit_button("Submit Leave Application")
-                
-                if submit_leave:
-                    if reason.strip() == "":
-                        st.error("Please provide a valid reason for leave.")
-                    else:
-                        new_id = len(st.session_state.leave_requests) + 1
-                        new_request = {
-                            "id": new_id,
-                            "name": current_user['name'],
-                            "type": leave_type,
-                            "days": leave_days,
-                            "status": "Pending"
-                        }
-                        st.session_state.leave_requests.append(new_request)
-                        st.success(f"Leave application submitted successfully! Pending for Admin approval.")
