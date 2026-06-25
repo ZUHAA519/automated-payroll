@@ -90,6 +90,8 @@ st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", widt
 st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
+# Emojis ko remove karke sirf text bacha lo taake match ho jaye
+page = page.replace("🏠", "").replace("➕", "").replace("📊", "").replace("📅", "").replace("💵", "").strip()
 # Dono emojis ko aik sath match kar do taake ghalti ka chance hi na rahe
 if "Calculator" in page or "Salary" in page:
     if "💵 Salary Calculator" not in globals():
