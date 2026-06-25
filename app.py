@@ -88,7 +88,7 @@ st.markdown("""
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
-page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "👤 Employee Portal"])
+page = st.sidebar.radio("Go to:", ["Dashboard Home", "Add Employee Profile", "Salary Calculator", "Attendance & Leaves", "Employee Portal"])
 
 st.sidebar.markdown("---")
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
@@ -258,7 +258,7 @@ if page == "👤 Employee Portal":
                     # ----------------------------------------------------
 # --- UPDATED: EMPLOYEE PORTAL WITH SECURE LOGIN ---
 # ----------------------------------------------------
-if page == "👤 Employee Portal":
+if page == "Employee Portal":
     st.markdown('<p class="main-title">Employee Portal Login 👤</p>', unsafe_allow_html=True)
     
     # Session state to track if user is logged in
