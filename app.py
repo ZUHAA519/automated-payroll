@@ -103,7 +103,7 @@ if page == "🏠 Dashboard Home":
     st.markdown('<p class="sub-title">Welcome to the Admin Control Panel.</p>', unsafe_allow_html=True)
     
     # Dashboard metrics columns definition
-    coll1, col2, col3 = st.columns(3)
+coll1, col2, col3 = st.columns(3)
     with col1:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
         st.metric(label="Total Employees", value=f"{total_emp_count}")
