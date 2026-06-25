@@ -90,15 +90,8 @@ st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", widt
 st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
-# Automatic background correction for any matching issues
-if "Salary Calculator" in page:
-    for k in st.session_state.keys():
-        if "Salary" in str(k) or "Calculator" in str(k):
-            page = k
-    # Default fallbacks agar code mein emoji dhoondna ho
-    if "Salary Calculator" in page and page not in ["📊 Salary Calculator", "💵 Salary Calculator"]:
-        page = "📊 Salary Calculator"
-st.sidebar.markdown("---")
+if "Calculator" in page or "Salary" in page:
+    page = "📊 Salary Calculator"
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
 
 # --- CALCULATE METRICS DYNAMICALLY ---
