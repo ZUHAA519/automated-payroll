@@ -91,11 +91,7 @@ st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
 if "Calculator" in page or "Salary" in page:
- # Automatic Exact Emoji Matcher
-if "Calculator" in page or "Salary" in page:
-    with open(__file__, "r", encoding="utf-8") as f:
-        code_content = f.read()
-    page = "💵 Salary Calculator" if "💵 Salary Calculator" in code_content else "📊 Salary Calculator"
+    page = "💵 Salary Calculator"
 # --- CALCULATE METRICS DYNAMICALLY ---
 total_emp_count = len(st.session_state.employee_list) + 146
 total_payroll = sum(emp['salary'] for emp in st.session_state.employee_list) + 4310000
