@@ -90,19 +90,20 @@ st.markdown("""
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=100)
 st.sidebar.title("Navigation Menu")
 
-# 1. Page variable yahan define ho raha hai (is se NameError khatam ho jayega)
+# 1. Sidebar Radio Menu
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
-# 2. Yeh line automatic background check karegi aur matching sahi karegi
+# 2. Exact Background Matching
 if "Calculator" in page or "Salary" in page:
     page = "📊 Salary Calculator"
 
 # --- PAGE 1: DASHBOARD HOME ---
-    with col1:
-        st.markdown('<div class="metric-box">', unsafe_allow_html=True)
-        st.metric(label="Total Employees", value=f"{total_emp_count}")
-        st.markdown('</div>', unsafe_allow_html=True)
-    with col2:
+if page == "🏠 Dashboard Home":
+    st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">Welcome to the Admin Control Panel.</p>', unsafe_allow_html=True)
+    
+    # Yeh line col1 ko define karegi taake NameError hamesha kanke liye khatam ho jaye
+    coll1, col2, col3 = st.columns(3)
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
         st.metric(label="Total Payroll This Month", value=f"Rs. {total_payroll:,}")
         st.markdown('</div>', unsafe_allow_html=True)
