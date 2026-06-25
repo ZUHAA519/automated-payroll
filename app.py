@@ -20,46 +20,42 @@ if "leave_requests" not in st.session_state:
     ]
 
 # Custom Styling
-st.markdown(# # Custom Styling (Line 22 ke neeche se ye paste karein)
+# --- REPLACED CLEAN CSS STYLING ---
 st.markdown("""
     <style>
-        /* Main Page Background */
+        /* 1. Pure Page ka Background */
         .stApp {
             background-color: #F8FAFC;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Main Heading & Subtitles */
+        /* 2. Main Title Design */
         h1, .main-title {
             color: #1E3A8A !important;
-            font-size: 38px !important;
+            font-size: 36px !important;
             font-weight: bold !important;
-            letter-spacing: 0.5px;
             padding-bottom: 10px;
             border-bottom: 3px solid #3B82F6;
-            margin-bottom: 25px;
-        }
-        
-        .sub-title {
-            font-size: 16px !important;
-            color: #555555 !important;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        /* Metrics / Dashboard Cards */
-        div[data-testid="stMetricValue"] {
-            font-size: 28px !important;
-            font-weight: bold !important;
-            color: #1E3A8A !important;
+        /* 3. Sidebar Colors & Text Visibility Fix */
+        section[data-testid="stSidebar"] {
+            background-color: #1E3A8A !important;
         }
         
-        div[data-testid="stMetricLabel"] {
-            font-size: 14px !important;
-            color: #475569 !important;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* Sidebar ke andar saare text ko white karne ke liye */
+        section[data-testid="stSidebar"] * {
+            color: #FFFFFF !important;
+        }
+        
+        /* Sidebar radio buttons / menu links fix */
+        section[data-testid="stSidebar"] label {
+            color: #FFFFFF !important;
+            font-weight: 500 !important;
         }
 
+        /* 4. Dashboard Metrics Boxes */
         div[data-testid="metric-container"] {
             background-color: #FFFFFF;
             border: 1px solid #E2E8F0;
@@ -67,43 +63,27 @@ st.markdown("""
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
+        div[data-testid="stMetricValue"] {
+            color: #1E3A8A !important;
+            font-weight: bold !important;
+        }
+        div[data-testid="stMetricLabel"] {
+            color: #475569 !important;
+        }
 
-        /* Buttons Customization with Hover Effects */
+        /* 5. App Buttons Styling */
         .stButton>button {
             background-color: #1E3A8A !important;
             color: white !important;
             border-radius: 6px !important;
             border: none !important;
-            padding: 0.5rem 1.5rem !important;
             font-weight: 600 !important;
-            transition: all 0.3s ease;
         }
-        
         .stButton>button:hover {
             background-color: #3B82F6 !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        /* Forms Styling */
-        div[data-testid="stForm"] {
-            background-color: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Sidebar Color styling */
-        section[data-testid="stSidebar"] {
-            background-color: #0F172A;
-        }
-        section[data-testid="stSidebar"] .stMarkdown p {
-            color: #E2E8F0 !important;
         }
     </style>
-""", unsafe_allow_html=True), unsafe_allow_html=True)
-
+""", unsafe_allow_html=True)
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
