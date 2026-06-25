@@ -91,8 +91,8 @@ st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
 # Automatic background correction for any matching issues
-if "Salary Calculator" in page: page = "📊 Salary Calculator"
-
+if "Salary Calculator" in page:
+    page = "💵 Salary Calculator"
 st.sidebar.markdown("---")
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
 
