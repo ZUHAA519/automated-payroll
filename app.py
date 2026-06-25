@@ -19,9 +19,14 @@ if "leave_requests" not in st.session_state:
         {"id": 2, "name": "Masooma", "type": "Casual Leave", "days": 1, "status": "Pending ⏳"},
     ]
 
-# --- LOAD EXTERNAL CSS FILE ---
-with open("style_payroll.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+# Custom Styling
+st.markdown("""
+    <style>
+    .main-title { font-size: 38px; font-weight: bold; color: #1E3A8A; margin-bottom: 5px; }
+    .sub-title { font-size: 16px; color: #555555; margin-bottom: 25px; }
+    .metric-box { padding: 20px; background-color: #F3F4F6; border-radius: 10px; border-left: 5px solid #1E3A8A; text-align: center; }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
