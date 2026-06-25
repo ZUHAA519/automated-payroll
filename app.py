@@ -90,13 +90,12 @@ st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", widt
 st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
 
+# Dono emojis ko aik sath match kar do taake ghalti ka chance hi na rahe
 if "Calculator" in page or "Salary" in page:
-    page = "📊 Salary Calculator"
-# --- CALCULATE METRICS DYNAMICALLY ---
-total_emp_count = len(st.session_state.employee_list) + 146
-total_payroll = sum(emp['salary'] for emp in st.session_state.employee_list) + 4310000
-pending_leaves_count = sum(1 for req in st.session_state.leave_requests if "Pending" in req["status"])
-
+    if "💵 Salary Calculator" not in globals():
+        page = "📊 Salary Calculator"
+    else:
+        page = "💵 Salary Calculator"
 # --- PAGE 1: DASHBOARD HOME ---
 if page == "🏠 Dashboard Home":
     st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
