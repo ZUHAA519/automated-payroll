@@ -89,6 +89,8 @@ st.markdown("""
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
 page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
+# Automatic emoji handler to make sure pages never go blank
+if "Salary Calculator" in page: page = "📊 Salary Calculator"
 
 st.sidebar.markdown("---")
 st.sidebar.info("💡 **FYP Project**\nAutomated Payroll Management Control Panel.")
