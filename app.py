@@ -277,7 +277,7 @@ if page == "Employee Portal":
                 # Authentication Logic
                 matched_user = None
                 for emp in st.session_state.employee_list:
-                    if (emp["name"].lower() == username_input.strip().lower() or emp["email"].lower() == username_input.strip().lower()) and str(emp["password"]) == password_input.strip():
+                if (emp["name"].lower() == username_input.strip().lower() or emp.get("email", "").lower() == username_input.strip().lower()) and str(emp.get("password", "123")) == password_input.strip():
                         matched_user = emp
                         break
                 
