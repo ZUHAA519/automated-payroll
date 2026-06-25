@@ -87,23 +87,21 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 # --- SIDEBAR NAVIGATION ---
-st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=100)
+st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
 
-# 1. Navigation options selector
-page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
-
-# 2. Background matching logic for Salary Calculator
+# Dono emojis ko aik sath match kar do taake ghalti ka chance hi na rahe
 if "Calculator" in page or "Salary" in page:
-    page = "📊 Salary Calculator"
-
+    if "💵 Salary Calculator" not in globals():
+        page = "📊 Salary Calculator"
+    else:
+        page = "💵 Salary Calculator"
 # --- PAGE 1: DASHBOARD HOME ---
 if page == "🏠 Dashboard Home":
     st.markdown('<p class="main-title">Automated Payroll Dashboard 💼</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-title">Welcome to the Admin Control Panel.</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">Welcome to the Admin Control Panel. Quick system overview metrics are below.</p>', unsafe_allow_html=True)
     
-    # Dashboard metrics columns definition
-coll1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown('<div class="metric-box">', unsafe_allow_html=True)
         st.metric(label="Total Employees", value=f"{total_emp_count}")
