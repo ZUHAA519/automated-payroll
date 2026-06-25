@@ -88,9 +88,9 @@ st.markdown("""
 # --- SIDEBAR NAVIGATION ---
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80)
 st.sidebar.title("Navigation Menu")
-# Force match salary calculator page to bypass emoji bugs
-if "Salary Calculator" in page:
-    page = "📊 Salary Calculator"# Automatic emoji handler to make sure pages never go blank
+page = st.sidebar.radio("Go to:", ["🏠 Dashboard Home", "➕ Add Employee Profile", "📊 Salary Calculator", "📅 Attendance & Leaves", "Employee Portal"])
+
+# Automatic background correction for any matching issues
 if "Salary Calculator" in page: page = "📊 Salary Calculator"
 
 st.sidebar.markdown("---")
