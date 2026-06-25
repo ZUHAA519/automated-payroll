@@ -6,11 +6,12 @@ st.set_page_config(page_title="Automated Payroll System", page_icon="💼", layo
 # --- INITIALIZE DATABASE (Session State) ---
 if "employee_list" not in st.session_state:
     st.session_state.employee_list = [
-        {"name": "Maliha", "role": "Teacher", "salary": 45000, "email": "maliha@academy.com"},
-        {"name": "Masooma", "role": "Coordinator", "salary": 55000, "email": "masooma@academy.com"},
-        {"name": "Fatima", "role": "Admin", "salary": 40000, "email": "fatima@academy.com"},
-        {"name": "Laiba", "role": "IT Support", "salary": 50000, "email": "laiba@academy.com"}
+        {"name": "Maliha", "role": "Teacher", "salary": 45000, "email": "maliha@academy.com", "password": "123"},
+        {"name": "Masooma", "role": "Coordinator", "salary": 55000, "email": "masooma@academy.com", "password": "123"},
+        {"name": "Fatima", "role": "Admin", "salary": 40000, "email": "fatima@academy.com", "password": "123"},
+        {"name": "Laiba", "role": "IT Support", "salary": 50000, "email": "laiba@academy.com", "password": "123"}
     ]
+
 
 # Leave Requests Database setup
 if "leave_requests" not in st.session_state:
@@ -254,3 +255,82 @@ if page == "👤 Employee Portal":
                     }
                     st.session_state.leave_requests.append(new_request)
                     st.success(f"Leave application submitted successfully! Pending for Admin approval.")
+                    # ----------------------------------------------------
+# --- UPDATED: EMPLOYEE PORTAL WITH SECURE LOGIN ---
+# ----------------------------------------------------
+if page == "👤 Employee Portal":
+    st.markdown('<p class="main-title">Employee Portal Login 👤</p>', unsafe_allow_html=True)
+    
+    # Session state to track if user is logged in
+    if "logged_in_user" not in st.session_state:
+        st.session_state.logged_in_user = None
+
+    if st.session_state.logged_in_user is None:
+        # Show Login Form
+        with st.form(key="login_form"):
+            st.subheader("Sign In to Your Workspace")
+            username_input = st.text_input("Enter Your Name / Email:")
+            password_input = st.text_input("Enter Password:", type="password")
+            login_submit = st.form_submit_button("Log In")
+            
+            if login_submit:
+                # Authentication Logic
+                matched_user = None
+                for emp in st.session_state.employee_list:
+                    if (emp["name"].lower() == username_input.strip().lower() or emp["email"].lower() == username_input.strip().lower()) and str(emp["password"]) == password_input.strip():
+                        matched_user = emp
+                        break
+                
+                if matched_user:
+                    st.session_state.logged_in_user = matched_user
+                    st.success(f"Welcome back, {matched_user['name']}! Login Successful.")
+                    st.rerun()
+                else:
+                    st.error("Invalid Username or Password. Please try again.")
+    else:
+        # User is securely Authenticated
+        current_user = st.session_state.logged_in_user
+        st.write(f"Logged in as: **{current_user['name']}** ({current_user['role']})")
+        
+        # Log Out Button
+        if st.button("Log Out"):
+            st.session_state.logged_in_user = None
+            st.rerun()
+            
+        st.markdown("---")
+        
+        # Tabs for Attendance and Leaves
+        tab1, tab2 = st.tabs(["📝 Mark Daily Attendance", "📅 Request Leave"])
+        
+        # TAB 1: ATTENDANCE
+        with tab1:
+            st.subheader("Daily Attendance Ingestion")
+            attendance_status = st.radio("Select Status:", ["Present", "Absent"])
+            
+            if st.button("Submit Attendance", key="auth_attendance_btn"):
+                st.success(f"Thank you, {current_user['name']}! Your attendance for today has been marked as '{attendance_status}'.")
+                
+        # TAB 2: LEAVE APPLICATION
+        with tab2:
+            st.subheader("Apply for Leave")
+            with st.form(key="auth_employee_leave_form"):
+                leave_type = st.selectbox("Leave Type:", ["Sick Leave", "Casual Leave", "Short Leave"])
+                leave_days = st.number_input("Number of Days:", min_value=1, max_value=10, value=1)
+                reason = st.text_area("Reason for Leave:")
+                
+                submit_leave = st.form_submit_button("Submit Leave Application")
+                
+                if submit_leave:
+                    if reason.strip() == "":
+                        st.error("Please provide a valid reason for leave.")
+                    else:
+                        new_id = len(st.session_state.leave_requests) + 1
+                        new_request = {
+                            "id": new_id,
+                            "name": current_user['name'],
+                            "type": leave_type,
+                            "days": leave_days,
+                            "status": "Pending"
+                        }
+                        st.session_state.leave_requests.append(new_request)
+                        st.success(f"Leave application submitted successfully! Pending for Admin approval.")
