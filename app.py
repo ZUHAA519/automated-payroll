@@ -208,3 +208,49 @@ elif page == "📅 Attendance & Leaves":
                         st.rerun()
         else:
             st.write(f"📝 *Request from {req['name']}: {req['status']}*")
+            # ----------------------------------------------------
+# --- NEW: EMPLOYEE PORTAL PANEL SECTION ---
+# ----------------------------------------------------
+if page == "👤 Employee Portal":
+    st.markdown('<p class="main-title">Employee Self-Service Portal 👤</p>', unsafe_allow_html=True)
+    st.write("Welcome to the Employee Portal. Please select your name to mark attendance or apply for leave.")
+    
+    # Employee selection dropdown
+    employee_names = [emp["name"] for emp in st.session_state.employee_list]
+    selected_emp = st.selectbox("Select Your Name:", employee_names)
+    
+    # Tabs for Attendance and Leaves
+    tab1, tab2 = st.tabs(["📝 Mark Daily Attendance", "📅 Request Leave"])
+    
+    # TAB 1: ATTENDANCE
+    with tab1:
+        st.subheader("Daily Attendance Ingestion")
+        attendance_status = st.radio("Select Status:", ["Present", "Absent"])
+        
+        if st.button("Submit Attendance", key="attendance_btn"):
+            st.success(f"Thank you, {selected_emp}! Your attendance for today has been marked as '{attendance_status}'.")
+            
+    # TAB 2: LEAVE APPLICATION
+    with tab2:
+        st.subheader("Apply for Form Leave")
+        with st.form(key="employee_leave_form"):
+            leave_type = st.selectbox("Leave Type:", ["Sick Leave", "Casual Leave", "Short Leave"])
+            leave_days = st.number_input("Number of Days:", min_value=1, max_value=10, value=1)
+            reason = st.text_area("Reason for Leave:")
+            
+            submit_leave = st.form_submit_button("Submit Leave Application")
+            
+            if submit_leave:
+                if reason.strip() == "":
+                    st.error("Please provide a valid reason for leave.")
+                else:
+                    new_id = len(st.session_state.leave_requests) + 1
+                    new_request = {
+                        "id": new_id,
+                        "name": selected_emp,
+                        "type": leave_type,
+                        "days": leave_days,
+                        "status": "Pending"
+                    }
+                    st.session_state.leave_requests.append(new_request)
+                    st.success(f"Leave application submitted successfully! Pending for Admin approval.")
